@@ -1,4 +1,4 @@
-function drawOracleChart() {
+function drawOracleChart(datos) {
     // Load the Visualization API and the corechart package.
     google.charts.load('current', {
         'packages': ['corechart'],
@@ -15,23 +15,53 @@ function drawOracleChart() {
 
         // Create the data table.
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Topping');
-        data.addColumn('number', 'Slices');
-        data.addRows([
-            ['Mushrooms', 3],
-            ['Onions', 1],
-            ['Olives', 1],
-            ['Zucchini', 1],
-            ['Pepperoni', 2]
-        ]);
 
-        // Set chart options
+        data.addColumn('number', 'X');
+        data.addColumn('number', 'Percent Idle');
+        data.addColumn('number', 'Percent Kernel');
+        data.addColumn('number', 'Percent User');
+
+        for (var i = 0; i < datos.length; i++) {
+            var obj = datos[i];
+            console.log(obj);
+            data.addRow([
+                parseFloat(obj["@attributes"].cpu), 
+                parseFloat(obj["@attributes"].percentIdle), 
+                parseFloat(obj["@attributes"].percentKernel), 
+                parseFloat(obj["@attributes"].percentUser)
+            ]);
+        }
+
         var options = {
-            'title': 'Oracle Traffic Director Billing Case'
+            hAxis: {
+                title: 'CPU',
+                textStyle: {
+                    color: '#607d8b',
+                    bold: true,
+                    italic: true
+                },
+                titleTextStyle: {
+                    color: '#607d8b',
+                    bold: false,
+                    italic: true
+                }
+            },
+            vAxis: {
+                title: 'Popularity',
+                textStyle: {
+                    color: '#607d8b',
+                    bold: true
+                },
+                titleTextStyle: {
+                    color: '#607d8b',
+                    bold: true
+                }
+            },
+            width: 900,
+            height: 500,
+            colors: ['#4caf50', '#03a9f4']
         };
-
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
         chart.draw(data, options);
     }
 }

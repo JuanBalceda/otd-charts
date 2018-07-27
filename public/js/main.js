@@ -46,9 +46,9 @@ saveData.addEventListener('click', function(){
 var showChart = document.getElementById("showChart");
 showChart.addEventListener('click', function(){
     event.preventDefault();
-    database.ref('otd').on('value', function(snapshot) {
-        console.log(snapshot.val());
-        drawOracleChart()
+    database.ref('otd').on('child_added', function(snapshot) {
+        var datosCPU = snapshot.val().stats.server["cpu-info"];
+        console.log(datosCPU);
+        drawOracleChart(datosCPU)
       });
 });
-
