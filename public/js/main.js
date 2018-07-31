@@ -12,14 +12,18 @@ var database = firebase.database();
 
 async function doAjax() {
     let result;
+    var urlXML = "get-stats-xml/node11/assurance/assurance_2018_07_27_03_00_AM_node_11.xml"
     try {
         result = await $.ajax({
-            url: "get-stats.xml", // path to file
+            url: urlXML, // path to file
             dataType: 'text' // type of file (text, json, xml, etc)
         });
         var parser = new DOMParser();
         var xml = parser.parseFromString(result, "text/xml");
         var json = xmlToJson(xml)
+        var date = urlXML.substring(41,60)
+        //console.log(date)
+        json['date'] = date;
         return json;
     } catch (error) {
         console.error(error);
@@ -29,7 +33,8 @@ async function doAjax() {
 function writeUserData(json) {
     var newPostKey = database.ref().push().key;
     var updates = {};
-    updates['/otd/' + newPostKey] = json;
+    //json['date'] = '2018_07_27_02_00_PM'
+    updates['/otd/node11/assurance/' + newPostKey] = json;
     database.ref().update(updates);
 };
 
