@@ -10,9 +10,24 @@ var config = {
 firebase.initializeApp(config);
 var database = firebase.database();
 
+var showChart = document.getElementById("showChart");
+showChart.addEventListener('click', function () {
+    event.preventDefault();
+    database.ref('otd/node11/assurance/').on('child_added', function (snapshot) {
+        var datosCPU = snapshot.val().stats.server["cpu-info"];
+        console.log(datosCPU);
+        drawOracleChart(datosCPU)
+    });
+});
+
+
+/*
 async function doAjax() {
     let result;
-    var urlXML = "get-stats-xml/node11/assurance/assurance_2018_07_27_03_00_AM_node_11.xml"
+    var urlXML =
+        "get-stats-xml/node12/operations/" +
+        "operations_2018_07_27_12_00_PM_node_12" +
+        ".xml"
     try {
         result = await $.ajax({
             url: urlXML, // path to file
@@ -21,7 +36,7 @@ async function doAjax() {
         var parser = new DOMParser();
         var xml = parser.parseFromString(result, "text/xml");
         var json = xmlToJson(xml)
-        var date = urlXML.substring(41,60)
+        var date = urlXML.substring(43,62)
         //console.log(date)
         json['date'] = date;
         return json;
@@ -29,17 +44,15 @@ async function doAjax() {
         console.error(error);
     }
 }
-
 function writeUserData(json) {
     var newPostKey = database.ref().push().key;
     var updates = {};
     //json['date'] = '2018_07_27_02_00_PM'
-    updates['/otd/node11/assurance/' + newPostKey] = json;
+    updates['/otd/node12/operations/' + newPostKey] = json;
     database.ref().update(updates);
 };
-
 var saveData = document.getElementById("saveData");
-saveData.addEventListener('click', function(){
+saveData.addEventListener('click', function () {
     event.preventDefault();
     doAjax().then(function (data) {
         //console.log(data)
@@ -47,13 +60,4 @@ saveData.addEventListener('click', function(){
         alert("Datos guardados correctamente.")
     });
 });
-
-var showChart = document.getElementById("showChart");
-showChart.addEventListener('click', function(){
-    event.preventDefault();
-    database.ref('otd').on('child_added', function(snapshot) {
-        var datosCPU = snapshot.val().stats.server["cpu-info"];
-        console.log(datosCPU);
-        drawOracleChart(datosCPU)
-      });
-});
+*/
